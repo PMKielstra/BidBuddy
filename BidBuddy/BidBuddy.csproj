@@ -5,5 +5,10 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EPBot64">
+      <HintPath>DLLs/EPBot64.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>
