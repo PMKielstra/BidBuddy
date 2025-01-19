@@ -36,11 +36,16 @@ namespace Bidding {
     public record Redouble: Bid;
     public record Raise(int level, Suit suit): Bid;
     public class Hand {
-        public bool IMPs;
-        public Position seat;
-        public Position dealer;
-        public Vulnerability vulnerability;
-        public List<(Suit, int)> cards;
+        public required Position seat;
+        public required Position dealer;
+        public required Vulnerability vulnerability;
+        public required List<(Suit, int)> cards;
+        public Hand(Position seat, Position dealer, Vulnerability vulnerability, List<(Suit, int)> cards) {
+            this.seat = seat;
+            this.dealer = dealer;
+            this.vulnerability = vulnerability;
+            this.cards = cards;
+        }
 
         private readonly string[] cardNames = {"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "A"};
 
@@ -60,10 +65,12 @@ namespace Bidding {
     public class Bidder {
         private System system;
         private List<string> conventions;
+        private bool IMPs;
         private Hand hand;
         
         private List<Bid> auction = new List<Bid>();
-        public Bidder(Hand hand, System system, List<String> conventions) {
+        public Bidder(Hand hand, bool IMPs, System system, List<String> conventions) {
+            this.IMPs = IMPs;
             this.hand = hand;
             this.system = system;
             this.conventions = conventions;
@@ -78,17 +85,17 @@ namespace Bidding {
             Double => 1,
             Redouble => 2,
             Raise(int level, Suit suit) => 4 * level + (int) suit + 1,
-            _ => -1
+            _ => throw new Exception()
         };
 
-        public Bid GetBid() {
+        public Bid MakeBid() {
             if (((int) this.hand.dealer + this.auction.Count()) % 4 != (int) this.hand.seat) return null;
 
             EPBot bot = new EPBot();
 
             var cards = this.hand.CardArray();
             bot.new_hand((int) this.hand.seat, ref cards, (int) this.hand.dealer, (int) this.hand.vulnerability);
-            bot.scoring = this.hand.IMPs ? 1 : 0;
+            bot.scoring = this.IMPs ? 1 : 0;
             
             foreach (int seat in new[] {0, 1}) {
                 bot.set_system_type(seat, (int) this.system);

@@ -10,5 +10,8 @@
       <HintPath>DLLs/EPBot64.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="YoloDotNet" Version="2.2.0" />
+  </ItemGroup>
 
 </Project>
