@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EPBot64">
-      <HintPath>DLLs/EPBot64.dll</HintPath>
+      <HintPath>../Using-the-EPBot/EPBot64.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
