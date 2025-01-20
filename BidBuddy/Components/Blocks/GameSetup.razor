@@ -1,0 +1,55 @@
+﻿@using Bidding
+
+<fieldset>
+    <legend>Scoring</legend>
+    <InputRadioGroup @bind-Value="IMPs">
+        <InputRadio Value="true">IMPs</InputRadio>
+        <InputRadio Value="false">Matchpoints</InputRadio>
+    </InputRadioGroup>
+</fieldset>
+
+<fieldset>
+    <legend>Bidding system</legend>
+    <InputSelect @bind-Value="system">
+        @foreach ((System optSystem, string name) in new[] {
+            (System.TwoOverOne, "2/1"),
+            (System.Precision, "Precision"),
+            (System.Acol, "Acol"),
+            (System.SAYC, "SAYC"),
+            (System.WJ, "WJ (Polish Club)")
+        }) {
+                <option checked="@(system == optSystem)" value="@name">@name</option>
+        }
+    </InputSelect>
+</fieldset>
+
+<fieldset>
+    <legend>Conventions</legend>
+    <SelectList @ref="RegularConventions" T="string" Elements="@conventions.Where(c => !c.Esoteric).Select(c => (c.Name, c.Name)).ToList()" />
+    <Accordion>
+        <AccordionItem title="More conventions">
+            <Content>
+                <SelectList @ref="EsotericConventions" T="string" Elements="@conventions.Where(c => c.Esoteric).Select(c => (c.Name, c.Name)).ToList()" />
+            </Content>
+        </AccordionItem>
+    </Accordion>
+</fieldset>
+
+@code {
+    class Convention {
+        public string Name;
+        public bool Esoteric;
+        public Convention(string Name, bool Esoteric) {
+            this.Name = Name;
+            this.Esoteric = Esoteric;
+        }
+    }
+    private bool IMPs = true;
+    private System system { get; set; } = System.TwoOverOne;
+    private List<Convention> conventions;
+    private SelectList<string> RegularConventions;
+    private SelectList<string> EsotericConventions;
+    public (bool, System, List<string>) GetGameInfo() {
+        return (IMPs, system, RegularConventions.GetSelected().Concat(EsotericConventions.GetSelected()).ToList());
+    }
+}

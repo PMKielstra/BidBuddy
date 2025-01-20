@@ -1,0 +1,26 @@
+﻿@typeparam T
+
+<div class="selectList">
+    @foreach ((int index, string label) in Elements.Select((elt, index) => (index, elt.Item2))) {
+        <SelectButton Active=@Selected[index]>@label</SelectButton>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public required List<(T, string)> Elements { get; set; }
+
+    private bool[] Selected = new bool[] {};
+
+    protected override void OnParametersSet() {
+        Selected = Enumerable.Repeat(false, Elements.Count).ToArray();
+    }
+
+    public List<T> GetSelected() {
+        return Enumerable.Zip(Elements, Selected)
+                         .Where(x => x.Second)
+                         .Select(x => x.First.Item1)
+                         .ToList();
+    }
+
+}

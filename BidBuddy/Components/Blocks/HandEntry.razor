@@ -1,0 +1,33 @@
+﻿<table class="handEntry">
+    @foreach((int index, string icon, string rowClass) in Suits.Select((x, i) => (i, x.Item2, x.Item3))) {
+        <tr>
+            <td class="rowClass">
+                @icon
+            </td>
+            <td>
+                <SelectList T="int" @ref=SuitLists[index] />
+            </td>
+        </tr>
+    }
+</table>
+
+@using Bidding;
+
+@code {
+    private SelectList<int>[] SuitLists = new SelectList<int>[] {null, null, null, null};
+    private List<(Suit, string, string)> Suits = new List<(Suit, string, string)> {
+        (Suit.Clubs, "♣", "blackSuit"),
+        (Suit.Diamonds, "♦", "redSuit"),
+        (Suit.Hearts, "♥", "redSuit"),
+        (Suit.Spades, "♣", "blackSuit")
+    };
+    public List<(Suit, int)> GetCards() {
+        return Enumerable.Zip(Suits, SuitLists)
+                         .Select(SuitDataAndSuitList => (
+                            SuitDataAndSuitList.Second.GetSelected()
+                                                      .Select(x => (SuitDataAndSuitList.First.Item1, x)) 
+                         ))
+                         .SelectMany(x => x)
+                         .ToList();
+    }
+}

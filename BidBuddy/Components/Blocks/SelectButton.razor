@@ -1,0 +1,9 @@
+﻿<Button Active="@Active" OnClick="Toggle">@ChildContent</Button>>
+
+@code {
+    [Parameter]
+    public bool Active { get; set; } = false;
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    private void Toggle() => Active = !Active;
+}

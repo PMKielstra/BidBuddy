@@ -11,6 +11,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.2.0" />
     <PackageReference Include="YoloDotNet" Version="2.2.0" />
   </ItemGroup>
 
