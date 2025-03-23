@@ -5,7 +5,7 @@
                 @icon
             </td>
             <td>
-                <SelectList T="int" @ref=SuitLists[index] />
+                <SelectList T="int" @ref=SuitLists[index] Elements=Cards/>
             </td>
         </tr>
     }
@@ -14,6 +14,9 @@
 @using Bidding;
 
 @code {
+    private List<(int, string)> Cards = new List<(int, string)> {
+        (0, "2"), (1, "3"), (2, "4"), (3, "5"), (4, "6"), (5, "7"), (6, "8"), (7, "9"), (8, "10"), (9, "J"), (10, "Q"), (11, "K"), (12, "A")
+    };
     private SelectList<int>[] SuitLists = new SelectList<int>[] {null, null, null, null};
     private List<(Suit, string, string)> Suits = new List<(Suit, string, string)> {
         (Suit.Clubs, "♣", "blackSuit"),
@@ -21,6 +24,11 @@
         (Suit.Hearts, "♥", "redSuit"),
         (Suit.Spades, "♣", "blackSuit")
     };
+    public void Clear() {
+        foreach (SelectList<int> suitList in SuitLists) {
+            suitList.SetSelected(Enumerable.Repeat(false, 13).ToList());
+        }
+    }
     public List<(Suit, int)> GetCards() {
         return Enumerable.Zip(Suits, SuitLists)
                          .Select(SuitDataAndSuitList => (

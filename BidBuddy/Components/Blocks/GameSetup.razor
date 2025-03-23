@@ -1,4 +1,5 @@
 ﻿@using Bidding
+@using Conventions
 
 <fieldset>
     <legend>Scoring</legend>
@@ -10,7 +11,7 @@
 
 <fieldset>
     <legend>Bidding system</legend>
-    <InputSelect @bind-Value="system">
+    <InputSelect @onchange="NewSystemSelected" @bind-Value="system">
         @foreach ((System optSystem, string name) in new[] {
             (System.TwoOverOne, "2/1"),
             (System.Precision, "Precision"),
@@ -23,33 +24,23 @@
     </InputSelect>
 </fieldset>
 
-<fieldset>
-    <legend>Conventions</legend>
-    <SelectList @ref="RegularConventions" T="string" Elements="@conventions.Where(c => !c.Esoteric).Select(c => (c.Name, c.Name)).ToList()" />
-    <Accordion>
-        <AccordionItem title="More conventions">
-            <Content>
-                <SelectList @ref="EsotericConventions" T="string" Elements="@conventions.Where(c => c.Esoteric).Select(c => (c.Name, c.Name)).ToList()" />
-            </Content>
-        </AccordionItem>
-    </Accordion>
-</fieldset>
+<Accordion>
+    <AccordionItem title="Set conventions">
+        <Content>
+            <SelectList @ref="SelectConventions" T="string" Elements="@conventions.Select(c => (c, c)).ToList()" />
+        </Content>
+    </AccordionItem>
+</Accordion>
 
 @code {
-    class Convention {
-        public string Name;
-        public bool Esoteric;
-        public Convention(string Name, bool Esoteric) {
-            this.Name = Name;
-            this.Esoteric = Esoteric;
-        }
-    }
     private bool IMPs = true;
     private System system { get; set; } = System.TwoOverOne;
-    private List<Convention> conventions;
-    private SelectList<string> RegularConventions;
-    private SelectList<string> EsotericConventions;
+    private List<string> conventions = Bidder.SupportedConventions();
+    private SelectList<string> SelectConventions;
+    private void NewSystemSelected(ChangeEventArgs e) {
+        SelectConventions.SetSelected(conventions.Select(c => Conventions.GetConvention(system, c)).ToList());
+    }
     public (bool, System, List<string>) GetGameInfo() {
-        return (IMPs, system, RegularConventions.GetSelected().Concat(EsotericConventions.GetSelected()).ToList());
+        return (IMPs, system, SelectConventions.GetSelected());
     }
 }

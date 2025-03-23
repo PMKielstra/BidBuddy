@@ -1,4 +1,6 @@
+using BlazorBootstrap;
 using EPBot64;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Bidding {
     public enum Suit {
@@ -35,6 +37,34 @@ namespace Bidding {
     public record Double: Bid;
     public record Redouble: Bid;
     public record Raise(int level, Suit suit): Bid;
+    public class AuctionCheck {
+        private static bool OpponentsJustDid<bidType>(List<Bid> auction) {
+            return auction.Count > 0 &&
+                    (auction.Last() is bidType
+                    || (
+                        auction.Count > 2 && (
+                            auction.Last() is Pass
+                            && auction[^2] is Pass
+                            && auction[^3] is bidType
+                        )
+                    ));
+        }
+        public static bool Allowed(Bid bid, List<Bid> auction) {
+            List<Raise> raises = auction.OfType<Raise>().ToList();
+            return bid switch {
+                Pass => true,
+                Raise(int newLevel, Suit newSuit) => (
+                    raises.Count == 0
+                    || raises.Last().level < newLevel
+                    || raises.Last().level == newLevel && raises.Last().suit < newSuit    
+                ),
+                Double => OpponentsJustDid<Raise>(auction),
+                Redouble => OpponentsJustDid<Double>(auction),
+                _ => false
+            };
+            
+        }
+    }
     public class Hand {
         public required Position seat;
         public required Position dealer;
@@ -119,6 +149,11 @@ namespace Bidding {
             this.AddBid(result);
 
             return result;
+        }
+
+        public static List<string> SupportedConventions() {
+            EPBot bot = new EPBot();
+            return Enumerable.Range(0, 255).Select(bot.get_convention_name).Where(n => n.Equals("Not defined")).ToList();
         }
 
     }

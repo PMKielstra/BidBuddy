@@ -16,6 +16,10 @@
         Selected = Enumerable.Repeat(false, Elements.Count).ToArray();
     }
 
+    public void SetSelected(List<bool> vals) {
+        Selected = vals.ToArray();
+    }
+
     public List<T> GetSelected() {
         return Enumerable.Zip(Elements, Selected)
                          .Where(x => x.Second)

@@ -1,0 +1,33 @@
+<Button Active=@Enabled() onclick="@onClick">
+    @Render()
+</Button>
+
+@using Bidding;
+
+@code {
+    [Parameter]
+    public List<Bidding.Bid> auction {get; set; }
+    
+    [Parameter]
+    public Bidding.Bid bid { get; set; }
+
+    [Parameter]
+    public Action onClick { get; set; }
+    
+    private bool Enabled() => Bidding.AuctionCheck.Allowed(bid, auction);
+
+    private string Render() {
+        return bid switch {
+            Bidding.Pass => "Pass",
+            Bidding.Double => "X",
+            Bidding.Redouble => "XX",
+            Bidding.Raise(int level, Suit suit) => level.ToString() + (suit switch {
+                Suit.Clubs => "♣",
+                Suit.Diamonds => "♦",
+                Suit.Hearts => "♥",
+                Suit.Spades => "♠",
+                Suit.Notrump => "NT"
+            })
+        };
+    }
+}

@@ -1,0 +1,24 @@
+@using Bidding;
+
+<table>
+@foreach (int level in levels) {
+    <tr>
+        @foreach(Suit suit in suits) {
+            <td>
+            <BidButton auction="@auction" bid=@(new Bidding.Raise(level, suit)) onClick=@(() => auction.Add(new Bidding.Raise(level, suit))) />
+            </td>
+        }
+    </tr>
+}
+</table>
+<BidButton auction="@auction" bid=@(new Bidding.Pass()) onClick=@(() => auction.Add(new Bidding.Pass())) />
+<BidButton auction="@auction" bid=@(new Bidding.Double()) onClick=@(() => auction.Add(new Bidding.Double())) />
+<BidButton auction="@auction" bid=@(new Bidding.Redouble()) onClick=@(() => auction.Add(new Bidding.Redouble())) />
+
+@code {
+    [Parameter]
+    public List<Bidding.Bid> auction { get; set; }
+
+    int[] levels = new int[]{1, 2, 3, 4, 5, 6, 7};
+    Suit[] suits = new Suit[]{Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades, Suit.Notrump};
+}

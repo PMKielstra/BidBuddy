@@ -1,0 +1,39 @@
+<Modal @ref="modal" Title="Enter hand" OnHiding="OnHidingModal">
+    <BodyTemplate>
+        <HandEntry @ref=handEntry />
+    </BodyTemplate>
+    <FooterTemplate>
+        <Button Color="ButtonColor.Secondary" @onclick="Clear">Clear</Button>
+        <Button Color="ButtonColor.Primary" @onclick="HideModal">OK</Button>
+    </FooterTemplate>
+</Modal>
+
+<Button Color=@color @onclick="ShowModal">Enter hand</Button>
+
+
+@using Bidding;
+
+@code {
+    private HandEntry handEntry;
+    private ButtonColor color = ButtonColor.Primary;
+    public List<(Suit, int)> GetCards() {
+        return handEntry.GetCards();
+    }
+    private Modal modal;
+    private async Task ShowModal() {
+        await modal.ShowAsync();
+    }
+    private async Task HideModal() {
+        await modal.HideAsync();
+    }
+    private void Clear() {
+        handEntry.Clear();
+    }
+    private void OnHidingModal() {
+        if (GetCards().Count() == 13) {
+            color = ButtonColor.Secondary;
+        } else {
+            color = ButtonColor.Primary;
+        }
+    }
+}

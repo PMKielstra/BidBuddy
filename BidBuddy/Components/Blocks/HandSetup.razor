@@ -1,0 +1,56 @@
+
+<p>Seat:</p>
+<SelectList T="Bidding.Position" @ref=HandPosition Elements=Positions />
+<p>Dealer:</p>
+<SelectList T="Bidding.Position" @ref=Dealer Elements=Positions />
+
+<table>
+    <tr>
+        <td>
+            Enter hand
+        </td>
+        <td></td>
+        <td>
+            Enter other three players' hands (in any order)
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <HandModalButton ref=@OneHandButton />
+        </td>
+        <td>
+            Or
+        </td>
+        <td>
+            @for(int i=0; i<3; i++) {
+                <HandModalButton ref=@ThreeHandsButtons[i] />
+            }
+        </td>
+    </tr>
+</table>
+
+@using Bidding;
+
+@code {
+    private List<(Bidding.Position, string)> Positions = new List<(Bidding.Position, string)> {
+        (Bidding.Position.North, "North"),
+        (Bidding.Position.East, "East"),
+        (Bidding.Position.South, "South"),
+        (Bidding.Position.West, "West")
+    };
+    private SelectList<Bidding.Position> HandPosition;
+    private SelectList<Bidding.Position> Dealer;
+    private HandModalButton OneHandButton;
+    private HandModalButton[] ThreeHandsButtons = new HandModalButton[]{null, null, null};
+    private List<Suit> Suits = new List<Suit> {Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades};
+    private List<int> Values = new List<int> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    private List<(Suit, int)> GetCards() {
+        var OneHandList = OneHandButton.GetCards();
+        if (OneHandList.Count() == 13) {
+            return OneHandList;
+        }
+        var allHands = ThreeHandsButtons.SelectMany(x => x.GetCards()).ToList();
+        return Suits.SelectMany(x => Values, (x, y) => (x, y))
+            .Where(x => !allHands.Contains(x)).ToList();
+    }
+}
