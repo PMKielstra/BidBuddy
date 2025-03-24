@@ -3,21 +3,28 @@
 <table>
 @foreach (int level in levels) {
     <tr>
-        @foreach(Suit suit in suits) {
+        @foreach (Suit suit in suits) {
             <td>
-            <BidButton auction="@auction" bid=@(new Bidding.Raise(level, suit)) onClick=@(() => auction.Add(new Bidding.Raise(level, suit))) />
+                <BidButton auction="@Auction" Enabled=@Enabled bid=@(new Bidding.Raise(level, suit)) onClick=@(() => MakeBid(new Bidding.Raise(level, suit))) />
             </td>
         }
     </tr>
 }
 </table>
-<BidButton auction="@auction" bid=@(new Bidding.Pass()) onClick=@(() => auction.Add(new Bidding.Pass())) />
-<BidButton auction="@auction" bid=@(new Bidding.Double()) onClick=@(() => auction.Add(new Bidding.Double())) />
-<BidButton auction="@auction" bid=@(new Bidding.Redouble()) onClick=@(() => auction.Add(new Bidding.Redouble())) />
+
+@foreach (Bidding.Bid bid in new Bidding.Bid[]{new Bidding.Pass(), new Bidding.Double(), new Bidding.Redouble()}) {
+    <BidButton auction="@Auction" Enabled=@Enabled bid=@bid onClick=@(() => MakeBid(bid)) />
+}
 
 @code {
     [Parameter]
-    public List<Bidding.Bid> auction { get; set; }
+    public List<Bidding.Bid> Auction { get; set; }
+
+    [Parameter]
+    public Action<Bidding.Bid> MakeBid { get; set; }
+    
+    [Parameter]
+    public bool Enabled { get; set; }
 
     int[] levels = new int[]{1, 2, 3, 4, 5, 6, 7};
     Suit[] suits = new Suit[]{Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades, Suit.Notrump};

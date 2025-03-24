@@ -1,0 +1,77 @@
+@using Bidding;
+
+@if (bidder is not null) {
+    <p>
+        @String.Join(" - ", myBids);
+    </p>
+
+    <p>
+        @BidMessage()
+    </p>
+
+    <BidGrid Enabled=@BidGridEnabled()
+             Auction=@bidder.auction
+             MakeBid=@bidder.AddBid />
+
+}
+
+@code {
+    [Parameter]
+    public required Hand hand { get; set; }
+
+    [Parameter]
+    public required bool IMPs { get; set; }
+
+    [Parameter]
+    public required System system { get; set; }
+
+    [Parameter]
+    public required List<String> conventions { get; set; }
+    
+    private Bidder? bidder = null;
+
+    private List<Bid> myBids = [];
+
+    private Bidding.Position? currentSeat = null;
+    private bool AuctionOver() {
+        if (bidder.auction.Count < 4) return false;
+        return bidder.auction.Last() is Bidding.Pass
+               && bidder.auction[^1] is Bidding.Pass
+               && bidder.auction[^2] is Bidding.Pass;
+    }
+
+    private string BidMessage() {
+        if (AuctionOver()) return "Auction complete!";
+        if (currentSeat == hand.seat) return "Stand by for bid&hellip;";
+        return "Please input bid for " + currentSeat switch {
+            Bidding.Position.North => "North",
+            Bidding.Position.South => "South",
+            Bidding.Position.East => "East",
+            Bidding.Position.West => "West"
+        };
+    }
+    private bool BidGridEnabled() {
+        return AuctionOver() && (currentSeat != hand.seat);
+    }
+
+    protected override void OnInitialized() {
+        bidder = new(hand, IMPs, system, conventions);
+        currentSeat = hand.dealer;
+        if (currentSeat == hand.seat) {
+            myBids.Add(bidder.MakeBid());
+        }
+    }
+
+    private void MakeBid(Bidding.Bid bid) {
+        bidder.AddBid(bid);
+        currentSeat = (Bidding.Position) (((int) currentSeat + 1) % 4);
+        if (currentSeat == hand.seat) {
+            if(AuctionOver()) {
+                return;
+            }
+            myBids.Add(bidder.MakeBid());
+            currentSeat = (Bidding.Position) (((int) currentSeat + 1) % 4);
+        }
+    }
+
+}

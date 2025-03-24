@@ -64,6 +64,20 @@ namespace Bidding {
             };
             
         }
+        public static string BidName(Bid bid) {
+            return bid switch {
+                Bidding.Pass => "Pass",
+                Bidding.Double => "X",
+                Bidding.Redouble => "XX",
+                Bidding.Raise(int level, Suit suit) => level.ToString() + (suit switch {
+                    Suit.Clubs => "♣",
+                    Suit.Diamonds => "♦",
+                    Suit.Hearts => "♥",
+                    Suit.Spades => "♠",
+                    Suit.Notrump => "NT"
+                })
+            };
+        }
     }
     public class Hand {
         public required Position seat;
@@ -98,7 +112,7 @@ namespace Bidding {
         private bool IMPs;
         private Hand hand;
         
-        private List<Bid> auction = new List<Bid>();
+        public List<Bid> auction { get; } = [];
         public Bidder(Hand hand, bool IMPs, System system, List<String> conventions) {
             this.IMPs = IMPs;
             this.hand = hand;
@@ -110,7 +124,7 @@ namespace Bidding {
             this.auction.Append(bid);
         }
 
-        private int EPBidID(Bid bid) => bid switch {
+        private static int EPBidID(Bid bid) => bid switch {
             Pass => 0,
             Double => 1,
             Redouble => 2,
@@ -121,7 +135,7 @@ namespace Bidding {
         public Bid MakeBid() {
             if (((int) this.hand.dealer + this.auction.Count()) % 4 != (int) this.hand.seat) return null;
 
-            EPBot bot = new EPBot();
+            EPBot bot = new();
 
             var cards = this.hand.CardArray();
             bot.new_hand((int) this.hand.seat, ref cards, (int) this.hand.dealer, (int) this.hand.vulnerability);
