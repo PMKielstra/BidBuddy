@@ -1,0 +1,57 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using BidBuddy.Components.Blocks
+@using Bidding
+
+<PageTitle>BidBuddy</PageTitle>
+
+@switch (state) {
+    case null:
+        break;
+    case Main.State.Game:
+        <GameSetup ref=@gameSetup IMPs=@IMPs system="@system"/>
+        <Button onclick="StartHandEntry">Next</Button>
+        break;
+    case Main.State.Hand:
+        <HandSetup ref=@handSetup />
+        <Button onclick="StartBidding">Bid!</Button>
+        break;
+    case Main.State.Bidding:
+        <BidUI
+            hand=@hand
+            IMPs=@IMPs
+            system=@system
+            conventions=@conventions
+            />
+        break;
+}
+
+@code {
+    enum State {
+        Game,
+        Hand,
+        Bidding
+    }
+
+    State? state = null;
+
+    public bool IMPs = true;
+    public Bidding.System system = System.TwoOverOne;
+    public GameSetup gameSetup;
+    private void ResetConventions() {
+        IMPs = true;
+        system = System.TwoOverOne;
+        gameSetup.NewSystemSelected(null);
+    }
+    private void StartHandEntry() {
+        state = State.Hand;
+    }
+    public HandSetup handSetup;
+    public Hand hand;
+    public List<String> conventions;
+    private void StartBidding() {
+        hand = handSetup.GetHand();
+        conventions = gameSetup.SelectConventions.GetSelected();
+        state = State.Bidding;
+    }
+} 

@@ -33,11 +33,13 @@
 </Accordion>
 
 @code {
-    private bool IMPs = true;
-    private System system { get; set; } = System.TwoOverOne;
+    [Parameter]
+    public bool IMPs {get; set;}
+    [Parameter]
+    public System system { get; set; }
     private List<string> conventions = Bidder.SupportedConventions();
-    private SelectList<string> SelectConventions;
-    private void NewSystemSelected(ChangeEventArgs e) {
+    public SelectList<string> SelectConventions;
+    public void NewSystemSelected(ChangeEventArgs? e) {
         SelectConventions.SetSelected(conventions.Select(c => Conventions.GetConvention(system, c)).ToList());
     }
     public (bool, System, List<string>) GetGameInfo() {

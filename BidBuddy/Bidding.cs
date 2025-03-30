@@ -80,10 +80,10 @@ namespace Bidding {
         }
     }
     public class Hand {
-        public required Position seat;
-        public required Position dealer;
-        public required Vulnerability vulnerability;
-        public required List<(Suit, int)> cards;
+        public Position seat;
+        public Position dealer;
+        public Vulnerability vulnerability;
+        public List<(Suit, int)> cards;
         public Hand(Position seat, Position dealer, Vulnerability vulnerability, List<(Suit, int)> cards) {
             this.seat = seat;
             this.dealer = dealer;

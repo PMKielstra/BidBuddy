@@ -54,23 +54,29 @@
         return AuctionOver() && (currentSeat != hand.seat);
     }
 
+    protected void AddBid(Bidding.Bid? bid) {
+        if (bid is null) {
+            bid = bidder.MakeBid();
+        }
+        myBids.Add(bid);
+        currentSeat = (Bidding.Position) (((int) currentSeat + 1) % 4);
+    }
+
     protected override void OnInitialized() {
         bidder = new(hand, IMPs, system, conventions);
         currentSeat = hand.dealer;
         if (currentSeat == hand.seat) {
-            myBids.Add(bidder.MakeBid());
+            AddBid(null);
         }
     }
 
     private void MakeBid(Bidding.Bid bid) {
-        bidder.AddBid(bid);
-        currentSeat = (Bidding.Position) (((int) currentSeat + 1) % 4);
+        AddBid(bid);
         if (currentSeat == hand.seat) {
             if(AuctionOver()) {
                 return;
             }
-            myBids.Add(bidder.MakeBid());
-            currentSeat = (Bidding.Position) (((int) currentSeat + 1) % 4);
+            AddBid(null);
         }
     }
 
