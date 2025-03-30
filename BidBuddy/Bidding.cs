@@ -80,16 +80,10 @@ namespace Bidding {
         }
     }
     public class Hand {
-        public Position seat;
-        public Position dealer;
-        public Vulnerability vulnerability;
-        public List<(Suit, int)> cards;
-        public Hand(Position seat, Position dealer, Vulnerability vulnerability, List<(Suit, int)> cards) {
-            this.seat = seat;
-            this.dealer = dealer;
-            this.vulnerability = vulnerability;
-            this.cards = cards;
-        }
+        public required Position seat {get; set;}
+        public required Position dealer {get; set;}
+        public required Vulnerability vulnerability {get; set;}
+        public required List<(Suit, int)> cards {get; set;}
 
         private readonly string[] cardNames = {"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "A"};
 

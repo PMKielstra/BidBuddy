@@ -9,11 +9,11 @@
     case null:
         break;
     case Main.State.Game:
-        <GameSetup ref=@gameSetup IMPs=@IMPs system="@system"/>
+        <GameSetup @ref=@gameSetup IMPs=@IMPs system="@system"/>
         <Button onclick="StartHandEntry">Next</Button>
         break;
     case Main.State.Hand:
-        <HandSetup ref=@handSetup />
+        <HandSetup @ref=@handSetup />
         <Button onclick="StartBidding">Bid!</Button>
         break;
     case Main.State.Bidding:
@@ -33,7 +33,7 @@
         Bidding
     }
 
-    State? state = null;
+    State? state = State.Game;
 
     public bool IMPs = true;
     public Bidding.System system = System.TwoOverOne;
