@@ -4,8 +4,8 @@
 <fieldset>
     <legend>Scoring</legend>
     <InputRadioGroup @bind-Value="IMPs">
-        <InputRadio Value="true">IMPs</InputRadio>
-        <InputRadio Value="false">Matchpoints</InputRadio>
+        <label><InputRadio Value=@true />IMPs</label>
+        <label><InputRadio Value=@false />Matchpoints</label>
     </InputRadioGroup>
 </fieldset>
 
@@ -19,7 +19,7 @@
             (System.SAYC, "SAYC"),
             (System.WJ, "WJ (Polish Club)")
         }) {
-                <option checked="@(system == optSystem)" value="@name">@name</option>
+                <option value=@optSystem>@name</option>
         }
     </InputSelect>
 </fieldset>

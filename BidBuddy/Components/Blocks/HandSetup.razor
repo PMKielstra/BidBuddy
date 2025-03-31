@@ -12,15 +12,15 @@
     </tr>
     <tr>
         <td>
-            <HandModalButton ref=@OneHandButton />
+            <HandModalButton @ref=@OneHandButton />
         </td>
         <td>
             Or
         </td>
         <td>
-            @for(int i=0; i<3; i++) {
-                <HandModalButton ref=@ThreeHandsButtons[i] />
-            }
+            <HandModalButton @ref=@h1 />
+            <HandModalButton @ref=@h2 />
+            <HandModalButton @ref=@h3 />
         </td>
     </tr>
 </table>
@@ -35,7 +35,9 @@
         (Bidding.Position.West, "West")
     };
     private HandModalButton OneHandButton;
-    private HandModalButton[] ThreeHandsButtons = new HandModalButton[]{null, null, null};
+    private HandModalButton h1;
+    private HandModalButton h2;
+    private HandModalButton h3;
     private List<Suit> Suits = new List<Suit> {Suit.Clubs, Suit.Diamonds, Suit.Hearts, Suit.Spades};
     private List<int> Values = new List<int> {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     public List<(Suit, int)> GetCards() {
@@ -43,13 +45,13 @@
         if (OneHandList.Count() == 13) {
             return OneHandList;
         }
-        var allHands = ThreeHandsButtons.SelectMany(x => x.GetCards()).ToList();
+        var allHands = new HandModalButton[]{h1, h2, h3}.SelectMany(x => x.GetCards()).ToList();
         return Suits.SelectMany(x => Values, (x, y) => (x, y))
             .Where(x => !allHands.Contains(x)).ToList();
     }
     public void Clear() {
         OneHandButton.Clear();
-        foreach (HandModalButton hmb in ThreeHandsButtons) {
+        foreach (HandModalButton hmb in new HandModalButton[]{h1, h2, h3}) {
             hmb.Clear();
         }
     }

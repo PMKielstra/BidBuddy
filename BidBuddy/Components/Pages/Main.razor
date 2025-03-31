@@ -10,11 +10,11 @@
         break;
     case Main.State.Game:
         <GameSetup @ref=@gameSetup IMPs=@IMPs system="@system"/>
-        <Button onclick="StartHandEntry">Next</Button>
+        <Button @onclick="StartHandEntry">Next</Button>
         break;
     case Main.State.Hand:
         <HandSetup @ref=@handSetup />
-        <Button onclick="StartBidding">Bid!</Button>
+        <Button @onclick="StartBidding">Bid!</Button>
         break;
     case Main.State.Bidding:
         <BidUI

@@ -1,9 +1,12 @@
-﻿<Button Active="@Active" OnClick="Toggle">@ChildContent</Button>>
+﻿@using BlazorBootstrap
+
+<Button Color="ButtonColor.Primary" Outline=@(!Active) Active=@Active @onclick="() => {Active = !Active;}">@ChildContent</Button>
 
 @code {
     [Parameter]
-    public bool Active { get; set; } = false;
+    public bool Active { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
-    private void Toggle() => Active = !Active;
 }
+
+

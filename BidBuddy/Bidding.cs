@@ -161,7 +161,7 @@ namespace Bidding {
 
         public static List<string> SupportedConventions() {
             EPBot bot = new EPBot();
-            return Enumerable.Range(0, 255).Select(bot.get_convention_name).Where(n => n.Equals("Not defined")).ToList();
+            return Enumerable.Range(0, 255).Select(bot.get_convention_name).Where(n => !n.Equals("Not defined")).ToList();
         }
 
     }
