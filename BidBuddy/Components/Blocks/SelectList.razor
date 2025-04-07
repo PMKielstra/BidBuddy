@@ -2,7 +2,7 @@
 
 <div class="selectList">
     @foreach ((int index, string label) in Elements.Select((elt, index) => (index, elt.Item2))) {
-        <SelectButton Active=@Selected[index]>@label</SelectButton>
+        <SelectButton @bind-Active="Selected[index]">@label</SelectButton>
     }
 </div>
 
