@@ -29,6 +29,12 @@
             suitList.SetSelected(Enumerable.Repeat(false, 13).ToList());
         }
     }
+    public void SetCards(List<(Suit, int)> inputCards) {
+        for (int i = 0; i < 4; i++) {
+            Suit suit = Suits[i].Item1;
+            SuitLists[i].SetSelected(Cards.Select(x => inputCards.Contains((suit, x.Item1))).ToList());
+        }
+    }
     public List<(Suit, int)> GetCards() {
         return Enumerable.Zip(Suits, SuitLists)
                          .Select(SuitDataAndSuitList => (

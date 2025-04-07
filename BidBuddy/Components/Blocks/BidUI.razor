@@ -1,9 +1,11 @@
-@using Bidding;
+@using Bidding
 
 @if (bidder is not null) {
-    <p>
-        @String.Join(" - ", myBids);
-    </p>
+    @if(myBids.Count > 0) {
+        <p>@String.Join(" - ", myBids)</p>
+    } else {
+        <p>No bids yet</p>
+    }
 
     <p>
         @BidMessage()

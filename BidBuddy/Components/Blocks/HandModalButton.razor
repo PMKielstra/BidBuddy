@@ -16,14 +16,18 @@
 @code {
     private HandEntry handEntry;
     private ButtonColor color = ButtonColor.Primary;
+    private List<(Suit, int)> cards = [];
     public List<(Suit, int)> GetCards() {
-        return handEntry.GetCards();
+        return cards;
     }
     private Modal modal;
+
     private async Task ShowModal() {
         await modal.ShowAsync();
+        handEntry.SetCards(cards);
     }
     private async Task HideModal() {
+        cards = handEntry.GetCards();
         await modal.HideAsync();
     }
     public void Clear() {

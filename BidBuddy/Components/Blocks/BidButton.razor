@@ -1,4 +1,4 @@
-<Button Active=@IsEnabled() onclick="@onClick">
+<Button Active=@IsEnabled() @onclick="Click">
     @AuctionCheck.BidName(bid)
 </Button>
 
@@ -16,6 +16,10 @@
 
     [Parameter]
     public bool Enabled { get; set; }
+
+    private void Click() {
+        onClick();
+    }
     
     private bool IsEnabled() => (Enabled && Bidding.AuctionCheck.Allowed(bid, auction));
 }
