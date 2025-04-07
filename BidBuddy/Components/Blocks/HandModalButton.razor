@@ -24,7 +24,9 @@
 
     private async Task ShowModal() {
         await modal.ShowAsync();
-        handEntry.SetCards(cards);
+        handEntry.SetCards(new List<(Suit, int)>{(Suit.Spades, 3)});
+        Console.WriteLine("Should be set by now");
+        
     }
     private async Task HideModal() {
         cards = handEntry.GetCards();

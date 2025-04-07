@@ -13,11 +13,14 @@
     private bool[] Selected = new bool[] {};
 
     protected override void OnParametersSet() {
-        Selected = Enumerable.Repeat(false, Elements.Count).ToArray();
+        if(Selected.Count() == 0) Selected = Enumerable.Repeat(false, Elements.Count).ToArray();
     }
 
     public void SetSelected(List<bool> vals) {
-        Selected = vals.ToArray();
+        for(int i = 0; i < vals.Count; i++) {
+            Selected[i] = vals[i];
+        }
+        StateHasChanged();
     }
 
     public List<T> GetSelected() {
